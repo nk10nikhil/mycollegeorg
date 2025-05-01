@@ -20,7 +20,7 @@ const formSchema = z.object({
   password: z.string().min(6, {
     message: "Password must be at least 6 characters",
   }),
-  role: z.enum(["student", "teacher", "director"]),
+  role: z.enum(["student", "teacher", "director", "admin"]),
 })
 
 export default function LoginPage() {
@@ -28,6 +28,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
 
   const defaultRole = searchParams.get("role") || "student"
 
@@ -36,27 +37,51 @@ export default function LoginPage() {
     defaultValues: {
       email: "",
       password: "",
-      role: defaultRole as "student" | "teacher" | "director",
+      role: defaultRole as "student" | "teacher" | "director" | "admin",
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
+    setError("")
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    try {
+      // For admin login, check against our predefined credentials
+      if (values.role === "admin") {
+        // Check if using the predefined admin credentials
+        if (values.email === "nk10nikhil@gmail.com" && values.password === "nk10nikhil") {
+          toast({
+            title: "Admin Login Successful",
+            description: "Welcome to the admin dashboard",
+          })
+          router.push("/dashboard/admin")
+          return
+        } else {
+          // In a real app, you would verify admin credentials against the database
+          setError("Invalid admin credentials")
+          setIsLoading(false)
+          return
+        }
+      }
 
-    setIsLoading(false)
+      // For other roles, simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
-    // For demo purposes, we'll just redirect based on role
-    // In a real app, you would validate credentials against your MongoDB
-    toast({
-      title: "Login successful",
-      description: `Logged in as ${values.role}`,
-    })
+      // For demo purposes, we'll just redirect based on role
+      // In a real app, you would validate credentials against your MongoDB
+      toast({
+        title: "Login successful",
+        description: `Logged in as ${values.role}`,
+      })
 
-    // Redirect based on role
-    router.push(`/dashboard/${values.role}`)
+      // Redirect based on role
+      router.push(`/dashboard/${values.role}`)
+    } catch (err) {
+      setError("An error occurred during login")
+      console.error("Login error:", err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -98,6 +123,7 @@ export default function LoginPage() {
                         <SelectItem value="student">Student</SelectItem>
                         <SelectItem value="teacher">Teacher</SelectItem>
                         <SelectItem value="director">Director</SelectItem>
+                        <SelectItem value="admin">Administrator</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -133,14 +159,21 @@ export default function LoginPage() {
                 )}
               />
 
+              {error && <div className="text-destructive text-sm">{error}</div>}
+
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="flex justify-center">
+        <CardFooter className="flex flex-col gap-2">
           <p className="text-sm text-muted-foreground">Don't have an account? Contact your administrator.</p>
+          {form.watch("role") === "admin" && (
+            <p className="text-xs text-muted-foreground">
+              Admin credentials: nk10nikhil@gmail.com / nk10nikhil
+            </p>
+          )}
         </CardFooter>
       </Card>
     </div>

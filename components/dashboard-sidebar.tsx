@@ -17,16 +17,20 @@ import {
   Settings,
   LogOut,
   Menu,
+  UserPlus,
+  ShieldCheck,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 interface SidebarProps {
-  role: "student" | "teacher" | "director"
+  role?: "student" | "teacher" | "director" | "admin"
+  items?: { title: string; href: string; icon?: any }[]
+  className?: string
 }
 
-export function DashboardSidebar({ role }: SidebarProps) {
+export function DashboardSidebar({ role, items, className }: SidebarProps) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
 
@@ -139,12 +143,53 @@ export function DashboardSidebar({ role }: SidebarProps) {
     },
   ]
 
-  const links = role === "student" ? studentLinks : role === "teacher" ? teacherLinks : directorLinks
+  const adminLinks = [
+    {
+      title: "Dashboard",
+      href: "/dashboard/admin",
+      icon: LayoutDashboard,
+    },
+    {
+      title: "Manage Users",
+      href: "/dashboard/admin/users",
+      icon: Users,
+    },
+    {
+      title: "Students",
+      href: "/dashboard/admin/users?role=student",
+      icon: GraduationCap,
+    },
+    {
+      title: "Teachers",
+      href: "/dashboard/admin/users?role=teacher",
+      icon: BookOpen,
+    },
+    {
+      title: "Add User",
+      href: "/dashboard/admin/users/add",
+      icon: UserPlus,
+    },
+    {
+      title: "Settings",
+      href: "/dashboard/admin/settings",
+      icon: Settings,
+    },
+  ]
 
-  const roleTitle = role.charAt(0).toUpperCase() + role.slice(1)
+  // If custom items are provided, use those
+  // Otherwise, select links based on role
+  const links = items || (
+    role === "student" ? studentLinks :
+      role === "teacher" ? teacherLinks :
+        role === "admin" ? adminLinks :
+          directorLinks
+  )
+
+  // Get role title (capitalize first letter)
+  const roleTitle = role ? (role.charAt(0).toUpperCase() + role.slice(1)) : "Dashboard"
 
   return (
-    <>
+    <div className={className}>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild className="lg:hidden">
           <Button variant="outline" size="icon" className="ml-2">
@@ -156,22 +201,22 @@ export function DashboardSidebar({ role }: SidebarProps) {
           <SidebarContent
             links={links}
             pathname={pathname}
-            role={role}
+            role={role || ""}
             roleTitle={roleTitle}
             onLinkClick={() => setOpen(false)}
           />
         </SheetContent>
       </Sheet>
 
-      <aside className="hidden lg:flex h-screen w-64 flex-col fixed inset-y-0 z-10">
-        <SidebarContent links={links} pathname={pathname} role={role} roleTitle={roleTitle} />
-      </aside>
-    </>
+      <div className="hidden lg:block">
+        <SidebarContent links={links} pathname={pathname} role={role || ""} roleTitle={roleTitle} />
+      </div>
+    </div>
   )
 }
 
 interface SidebarContentProps {
-  links: { title: string; href: string; icon: any }[]
+  links: { title: string; href: string; icon?: any }[]
   pathname: string
   role: string
   roleTitle: string
@@ -180,7 +225,7 @@ interface SidebarContentProps {
 
 function SidebarContent({ links, pathname, role, roleTitle, onLinkClick }: SidebarContentProps) {
   return (
-    <div className="flex h-full flex-col border-r bg-background">
+    <div className="flex h-full flex-col">
       <div className="flex h-14 items-center border-b px-4">
         <Link href={`/dashboard/${role}`} className="flex items-center gap-2 font-semibold" onClick={onLinkClick}>
           <School className="h-6 w-6" />
@@ -204,7 +249,7 @@ function SidebarContent({ links, pathname, role, roleTitle, onLinkClick }: Sideb
                       : "hover:bg-muted text-muted-foreground hover:text-foreground",
                   )}
                 >
-                  <link.icon className="h-4 w-4" />
+                  {link.icon && <link.icon className="h-4 w-4" />}
                   {link.title}
                 </Link>
               ))}
@@ -214,14 +259,16 @@ function SidebarContent({ links, pathname, role, roleTitle, onLinkClick }: Sideb
       </div>
       <div className="mt-auto border-t p-4">
         <div className="flex flex-col gap-4">
-          <Link
-            href="/dashboard/settings"
-            onClick={onLinkClick}
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
-          >
-            <Settings className="h-4 w-4" />
-            Settings
-          </Link>
+          {role !== "admin" && (
+            <Link
+              href="/dashboard/settings"
+              onClick={onLinkClick}
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
+            >
+              <Settings className="h-4 w-4" />
+              Settings
+            </Link>
+          )}
           <Link
             href="/"
             onClick={onLinkClick}
