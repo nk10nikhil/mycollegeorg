@@ -18,7 +18,7 @@ import { useToast } from "@/components/ui/use-toast"
 export default function DirectorForms() {
   const { toast } = useToast();
   const [isCreatingForm, setIsCreatingForm] = useState(false);
-  
+
   // Sample data for forms
   const forms = [
     {
@@ -100,7 +100,7 @@ export default function DirectorForms() {
       ],
     },
   ];
-  
+
   // Handle form creation
   const handleCreateForm = () => {
     toast({
@@ -109,7 +109,7 @@ export default function DirectorForms() {
     });
     setIsCreatingForm(false);
   };
-  
+
   // Handle form publishing
   const handlePublishForm = (formId: string) => {
     toast({
@@ -117,7 +117,7 @@ export default function DirectorForms() {
       description: "The form has been published and is now available to the target audience.",
     });
   };
-  
+
   // Handle form deletion
   const handleDeleteForm = (formId: string) => {
     toast({
@@ -135,14 +135,14 @@ export default function DirectorForms() {
           Create New Form
         </Button>
       </div>
-      
+
       <Tabs defaultValue="active" className="space-y-4">
         <TabsList>
           <TabsTrigger value="active">Active Forms</TabsTrigger>
           <TabsTrigger value="draft">Draft Forms</TabsTrigger>
           <TabsTrigger value="archived">Archived Forms</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="active" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {forms.filter(form => form.status === "published").map((form) => (
@@ -166,29 +166,29 @@ export default function DirectorForms() {
                         <span>{form.submissions} submissions</span>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center">
                         <CalendarDays className="h-4 w-4 mr-1 text-muted-foreground" />
                         <span>
-                          {new Date(form.startDate).toLocaleDateString('en-US', { 
-                            month: 'short', 
-                            day: 'numeric' 
-                          })} - {new Date(form.endDate).toLocaleDateString('en-US', { 
-                            month: 'short', 
-                            day: 'numeric' 
+                          {new Date(form.startDate).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric'
+                          })} - {new Date(form.endDate).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric'
                           })}
                         </span>
                       </div>
                     </div>
-                    
+
                     {form.department && (
                       <div className="text-sm">
                         <span className="text-muted-foreground">Department: </span>
                         <span>{form.department}</span>
                       </div>
                     )}
-                    
+
                     {form.batch && (
                       <div className="text-sm">
                         <span className="text-muted-foreground">Batch: </span>
@@ -218,7 +218,7 @@ export default function DirectorForms() {
             ))}
           </div>
         </TabsContent>
-        
+
         <TabsContent value="draft" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {forms.filter(form => form.status === "draft").map((form) => (
@@ -238,29 +238,29 @@ export default function DirectorForms() {
                         <span>Target: {form.targetAudience === "all" ? "Everyone" : form.targetAudience === "students" ? "Students" : "Teachers"}</span>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center">
                         <CalendarDays className="h-4 w-4 mr-1 text-muted-foreground" />
                         <span>
-                          {new Date(form.startDate).toLocaleDateString('en-US', { 
-                            month: 'short', 
-                            day: 'numeric' 
-                          })} - {new Date(form.endDate).toLocaleDateString('en-US', { 
-                            month: 'short', 
-                            day: 'numeric' 
+                          {new Date(form.startDate).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric'
+                          })} - {new Date(form.endDate).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric'
                           })}
                         </span>
                       </div>
                     </div>
-                    
+
                     {form.department && (
                       <div className="text-sm">
                         <span className="text-muted-foreground">Department: </span>
                         <span>{form.department}</span>
                       </div>
                     )}
-                    
+
                     {form.batch && (
                       <div className="text-sm">
                         <span className="text-muted-foreground">Batch: </span>
@@ -286,14 +286,14 @@ export default function DirectorForms() {
             ))}
           </div>
         </TabsContent>
-        
+
         <TabsContent value="archived" className="space-y-4">
           <div className="flex items-center justify-center h-40 bg-muted/20 rounded-lg border border-dashed">
             <p className="text-muted-foreground">No archived forms found</p>
           </div>
         </TabsContent>
       </Tabs>
-      
+
       <Dialog open={isCreatingForm} onOpenChange={setIsCreatingForm}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
@@ -302,18 +302,18 @@ export default function DirectorForms() {
               Create a new form to collect information from students, teachers, or both.
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="title">Form Title</Label>
               <Input id="title" placeholder="Enter form title" />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="description">Description</Label>
               <Textarea id="description" placeholder="Enter form description" rows={3} />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="target">Target Audience</Label>
@@ -328,7 +328,7 @@ export default function DirectorForms() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="department">Department</Label>
                 <Select>
@@ -346,19 +346,19 @@ export default function DirectorForms() {
                 </Select>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="start-date">Start Date</Label>
                 <Input id="start-date" type="date" />
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="end-date">End Date</Label>
                 <Input id="end-date" type="date" />
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Label>Form Fields</Label>
               <div className="border rounded-md p-4 space-y-4">
@@ -368,12 +368,12 @@ export default function DirectorForms() {
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
-                
+
                 <div className="grid gap-2">
                   <Label htmlFor="field-label">Field Label</Label>
                   <Input id="field-label" placeholder="Enter field label" defaultValue="Full Name" />
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="field-type">Field Type</Label>
@@ -393,8 +393,28 @@ export default function DirectorForms() {
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   <div className="flex items-end">
                     <div className="flex items-center space-x-2">
                       <Checkbox id="required" defaultChecked />
-                      <Label htmlFor="required">Required Field</Label>\
+                      <Label htmlFor="required">Required Field</Label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end space-x-2">
+            <Button variant="outline" onClick={() => setIsCreatingForm(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateForm}>
+              Create Form
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
