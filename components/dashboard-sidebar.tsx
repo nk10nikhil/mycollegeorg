@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { LogoutButton } from "@/components/logout-button"
 
 interface SidebarProps {
   role?: "student" | "teacher" | "director" | "admin"
@@ -269,14 +270,11 @@ function SidebarContent({ links, pathname, role, roleTitle, onLinkClick }: Sideb
               Settings
             </Link>
           )}
-          <Link
-            href="/"
-            onClick={onLinkClick}
+          <div
             className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
           >
-            <LogOut className="h-4 w-4" />
-            Logout
-          </Link>
+            <LogoutButton />
+          </div>
         </div>
       </div>
     </div>
